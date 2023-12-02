@@ -31,7 +31,8 @@ backup_data_dir_root: ./data # Your dataset backup folder
 max_train_steps: 500
 num_of_generated_img: 3
 dmin_c: 10
-dsize_c: 20         
+# dsize_c: 20    
+dsize_c: 1    
 infer_steps: 35
 adam_epsilon: 0.000000001
 adam_weight_decay: 0.0001
