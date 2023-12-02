@@ -6,7 +6,7 @@ import os
 # import random
 import shutil
 # from pathlib import Path
-from typing import Dict
+# from typing import Dict
 # from torch.utils.data import Dataset
 # import datasets
 import numpy as np
@@ -15,23 +15,23 @@ import torch
 import torch.utils.checkpoint
 # import transformers
 # from accelerate import Accelerator
-from accelerate.logging import get_logger
-from accelerate.utils import DistributedDataParallelKwargs, ProjectConfiguration, set_seed
-from datasets import load_dataset
-from huggingface_hub import create_repo, upload_folder
+# from accelerate.logging import get_logger
+# from accelerate.utils import DistributedDataParallelKwargs, ProjectConfiguration, set_seed
+# from datasets import load_dataset
+# from huggingface_hub import create_repo, upload_folder
 # from packaging import version
 # from torchvision import transforms
-from torchvision.transforms.functional import crop
-from tqdm.auto import tqdm
+# from torchvision.transforms.functional import crop
+# from tqdm.auto import tqdm
 # from transformers import AutoTokenizer, PretrainedConfig, CLIPTextModel, CLIPTokenizer
 # import diffusers
 from diffusers import AutoencoderKL, DDPMScheduler, StableDiffusionXLPipeline, UNet2DConditionModel
 # from diffusers.loaders import LoraLoaderMixin
 # from diffusers.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
-from diffusers.optimization import get_scheduler
-from diffusers.training_utils import compute_snr
-from diffusers.utils import check_min_version, is_wandb_available
-from diffusers.utils.import_utils import is_xformers_available
+# from diffusers.optimization import get_scheduler
+# from diffusers.training_utils import compute_snr
+# from diffusers.utils import check_min_version, is_wandb_available
+# from diffusers.utils.import_utils import is_xformers_available
 from PIL import Image
 # import PIL
 # import safetensors
@@ -40,7 +40,7 @@ import numpy as np
 from diffusers import DiffusionPipeline
 from sdxl_the_chosen_one import train as train_pipeline
 import shutil
-from pathlib import Path
+# from pathlib import Path
 import torchvision.transforms as T
 from sklearn.manifold import TSNE
 from sklearn.cluster import KMeans
