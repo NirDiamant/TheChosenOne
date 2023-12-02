@@ -572,7 +572,7 @@ class TextualInversionDataset(Dataset):
         args,
         data_root,
         tokenizer_one,
-        # tokenizer_two,
+        tokenizer_two,
         learnable_property="object",  # [object, style]
         size=512,
         repeats=100,
@@ -584,7 +584,7 @@ class TextualInversionDataset(Dataset):
     ):
         self.data_root = data_root
         self.tokenizer_one = tokenizer_one
-        # self.tokenizer_two = tokenizer_two
+        self.tokenizer_two = tokenizer_two
         self.learnable_property = learnable_property
         self.size = size
         self.placeholder_token = placeholder_token
@@ -658,13 +658,13 @@ class TextualInversionDataset(Dataset):
             return_tensors="pt",
         ).input_ids[0] # tokenize the whole sentence, e.g. a rendering of "placeholder"
         
-        # example["input_ids_two"] = self.tokenizer_two(
-        #     text,
-        #     padding="max_length",
-        #     truncation=True,
-        #     max_length=self.tokenizer_two.model_max_length,
-        #     return_tensors="pt",
-        # ).input_ids[0] # tokenize the whole sentence, e.g. a rendering of "placeholder"
+        example["input_ids_two"] = self.tokenizer_two(
+            text,
+            padding="max_length",
+            truncation=True,
+            max_length=self.tokenizer_two.model_max_length,
+            return_tensors="pt",
+        ).input_ids[0] # tokenize the whole sentence, e.g. a rendering of "placeholder"
         
         # # default to score-sde preprocessing
         # img = np.array(image).astype(np.uint8)
@@ -819,8 +819,8 @@ def train(args, loop=0, loop_num = 0):
     # dzc: Original CLIP tokenizer encoder
     tokenizer_one = AutoTokenizer.from_pretrained(
         args.pretrained_model_name_or_path, subfolder="tokenizer", revision=args.revision, use_fast=False)
-    # tokenizer_two = AutoTokenizer.from_pretrained(
-    #     args.pretrained_model_name_or_path, subfolder="tokenizer_2", revision=args.revision, use_fast=False)
+    tokenizer_two = AutoTokenizer.from_pretrained(
+        args.pretrained_model_name_or_path, subfolder="tokenizer_2", revision=args.revision, use_fast=False)
     
     # import correct text encoder classes
     text_encoder_cls_one = import_model_class_from_model_name_or_path(
@@ -869,9 +869,9 @@ def train(args, loop=0, loop_num = 0):
     placeholder_tokens += additional_tokens
 
     num_added_tokens_one = tokenizer_one.add_tokens(placeholder_tokens) # add the tokens to the vocabulary of the first tokenizer and give it a id
-    # num_added_tokens_two = tokenizer_two.add_tokens(placeholder_tokens) # add the tokens to the vocabulary of the first tokenizer and give it a id
+    num_added_tokens_two = tokenizer_two.add_tokens(placeholder_tokens) # add the tokens to the vocabulary of the first tokenizer and give it a id
     
-    # assert num_added_tokens_one == num_added_tokens_two, "Incompetible number of tokens!"
+    assert num_added_tokens_one == num_added_tokens_two, "Incompetible number of tokens!"
     
     if num_added_tokens_one != args.num_vectors:
         raise ValueError(
@@ -881,8 +881,8 @@ def train(args, loop=0, loop_num = 0):
 
     # Convert the initializer_token, placeholder_token to ids, for example "cat" -> 5988
     token_ids_one = tokenizer_one.encode(args.initializer_token, add_special_tokens=False) 
-    # token_ids_two = tokenizer_two.encode(args.initializer_token, add_special_tokens=False) 
-    # assert token_ids_one == token_ids_two, "Different token ids!"
+    token_ids_two = tokenizer_two.encode(args.initializer_token, add_special_tokens=False) 
+    assert token_ids_one == token_ids_two, "Different token ids!"
     
     # Check if initializer_token is a single token or a sequence of tokens
     if len(token_ids_one) > 1:
@@ -890,12 +890,12 @@ def train(args, loop=0, loop_num = 0):
 
     initializer_token_id_one = token_ids_one[0]
     placeholder_token_ids_one = tokenizer_one.convert_tokens_to_ids(placeholder_tokens)
-    # initializer_token_id_two = token_ids_two[0]
-    # placeholder_token_ids_two = tokenizer_two.convert_tokens_to_ids(placeholder_tokens)
+    initializer_token_id_two = token_ids_two[0]
+    placeholder_token_ids_two = tokenizer_two.convert_tokens_to_ids(placeholder_tokens)
 
     # Resize the token embeddings as we are adding new special tokens to the tokenizer
     text_encoder_one.resize_token_embeddings(len(tokenizer_one))
-    # text_encoder_two.resize_token_embeddings(len(tokenizer_two))
+    text_encoder_two.resize_token_embeddings(len(tokenizer_two))
 
     # Initialise the newly added placeholder token with the embeddings of the initializer token
     token_embeds_one = text_encoder_one.get_input_embeddings().weight.data
@@ -903,8 +903,8 @@ def train(args, loop=0, loop_num = 0):
     with torch.no_grad():
         for token_id in placeholder_token_ids_one:
             token_embeds_one[token_id] = token_embeds_one[initializer_token_id_one].clone()
-        # for token_id in placeholder_token_ids_two:
-        #     token_embeds_two[token_id] = token_embeds_two[initializer_token_id_two].clone()
+        for token_id in placeholder_token_ids_two:
+            token_embeds_two[token_id] = token_embeds_two[initializer_token_id_two].clone()
     
     # ######################################################################
     # Finish loading textual inversion
@@ -1136,7 +1136,7 @@ def train(args, loop=0, loop_num = 0):
             args=args,
             data_root=args.train_data_dir,
             tokenizer_one=tokenizer_one,
-            # tokenizer_two=tokenizer_two,
+            tokenizer_two=tokenizer_two,
             size=args.resolution,
             placeholder_token=(" ".join(tokenizer_one.convert_ids_to_tokens(placeholder_token_ids_one))),
             repeats=args.repeats,
@@ -1490,17 +1490,17 @@ def train(args, loop=0, loop_num = 0):
                 index_no_updates_one = torch.ones((len(tokenizer_one),), dtype=torch.bool)
                 index_no_updates_one[min(placeholder_token_ids_one) : max(placeholder_token_ids_one) + 1] = False
                 
-                # index_no_updates_two = torch.ones((len(tokenizer_two),), dtype=torch.bool)
-                # index_no_updates_two[min(placeholder_token_ids_two) : max(placeholder_token_ids_two) + 1] = False
+                index_no_updates_two = torch.ones((len(tokenizer_two),), dtype=torch.bool)
+                index_no_updates_two[min(placeholder_token_ids_two) : max(placeholder_token_ids_two) + 1] = False
                 
                 with torch.no_grad():
                     accelerator.unwrap_model(text_encoder_one).get_input_embeddings().weight[
                         index_no_updates_one
                     ] = orig_embeds_params_one[index_no_updates_one]
                     
-                    # accelerator.unwrap_model(text_encoder_two).get_input_embeddings().weight[
-                    #     index_no_updates_two
-                    # ] = orig_embeds_params_two[index_no_updates_two]
+                    accelerator.unwrap_model(text_encoder_two).get_input_embeddings().weight[
+                        index_no_updates_two
+                    ] = orig_embeds_params_two[index_no_updates_two]
 
             # Checks if the accelerator has performed an optimization step behind the scenes
             if accelerator.sync_gradients:
@@ -1687,7 +1687,7 @@ def train(args, loop=0, loop_num = 0):
                 vae=vae,
                 unet=unet,
                 tokenizer=tokenizer_one,
-                # tokenizer_2=tokenizer_two,
+                tokenizer_2=tokenizer_two,
             )
             pipeline.save_pretrained(args.output_dir)
             
