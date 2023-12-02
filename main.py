@@ -112,7 +112,7 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
             if loop==0 and os.path.exists(os.path.join(tmp_folder, f"{n_img}.png")):
                 image = Image.open(os.path.join(tmp_folder, f"{n_img}.png")).convert('RGB')
             else:
-                image = generate_images(pipe, prompt=args.inference_prompt, negative_prompt=args.negative_prompt, infer_steps=args.infer_steps)
+                image = generate_images(pipe, prompt=args.inference_prompt, infer_steps=args.infer_steps)
                 
             images.append(image)
             image_embs.append(infer_model(dinov2, image).detach().cpu().numpy())
@@ -288,12 +288,12 @@ def infer_model(model, image):
     return cls_token
 
 
-def generate_images(pipe: StableDiffusionXLPipeline, prompt: str, negative_prompt:str, infer_steps, guidance_scale=7.5):
+def generate_images(pipe: StableDiffusionXLPipeline, prompt: str, infer_steps, guidance_scale=7.5):
     """
     use the given DiffusionPipeline, generate N images for the same character
     return: image, in PIL
     """
-    image = pipe(prompt=prompt, negative_prompt=negative_prompt,num_inference_steps=infer_steps, guidance_scale=guidance_scale).images[0]
+    image = pipe(prompt=prompt, num_inference_steps=infer_steps, guidance_scale=guidance_scale).images[0]
     return image
 
 
