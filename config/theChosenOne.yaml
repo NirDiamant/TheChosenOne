@@ -4,7 +4,7 @@ pretrained_model_name_or_path: stablediffusionapi/realistic-vision-512
 pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
 # 
 # inference_prompt: A photo of a 50 years old man with curly hair.
-inference_prompt: RAW photo, a portrait photo of a shapely and sporty latina woman model with doube D bra size through cleavage in casual clothes, natural skin, 8k uhd, high quality, film grain, Fujifilm XT3
+inference_prompt: RAW photo, a portrait photo of a shapely and sporty beautiful latina woman model with full lips and doube D bra size through cleavage in casual clothes, natural skin, 8k uhd, high quality, film grain, Fujifilm XT3
 # negative_prompt: (deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck
 learnable_property: object
 initializer_token: cha
