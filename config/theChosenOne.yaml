@@ -26,10 +26,10 @@ seed: 42
 character_name: luciavarelaarroyo
 output_dir: ./experiments
 train_data_dir: ./loop_images
-backup_data_dir_root: /home/n7/TheChosenOne/data/  # Your dataset backup folder
+backup_data_dir_root: ./data # Your dataset backup folder
 # lora_ckpt_dir: checkpoint-1200
 max_train_steps: 500
-num_of_generated_img: 128
+num_of_generated_img: 1
 dmin_c: 10
 dsize_c: 20         
 infer_steps: 35
