@@ -29,16 +29,16 @@ train_data_dir: ./loop_images
 backup_data_dir_root: ./data # Your dataset backup folder
 # lora_ckpt_dir: checkpoint-1200
 max_train_steps: 500
-num_of_generated_img: 20
-dmin_c: 10
+num_of_generated_img: 6
+dmin_c: 3
 # dsize_c: 20    
-dsize_c: 10    
+dsize_c: 3    
 infer_steps: 35
 adam_epsilon: 0.000000001
 adam_weight_decay: 0.0001
 adam_beta1: 0.9
 adam_beta2: 0.99
-max_loop: 5
+max_loop: 1
 convergence_scale: 0.6 # 80% in the paper
 
 # inherited from origin, no need to change
