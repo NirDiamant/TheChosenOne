@@ -1,5 +1,7 @@
-pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
+# pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
 # pretrained_model_name_or_path: stablediffusionapi/realistic-vision-512
+pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl
+
 
 pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
 # 
