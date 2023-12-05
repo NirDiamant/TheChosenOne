@@ -1,12 +1,17 @@
 # pretrained_model_name_or_path: stabilityai/stable-diffusion-xl-base-1.0
 # pretrained_model_name_or_path: stablediffusionapi/realistic-vision-512
-pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl
+# pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl
+
+pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl-v7
 
 
 pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
 # 
 # inference_prompt: A photo of a 50 years old man with curly hair.
-inference_prompt: RAW photo, a portrait photo of a shapely and sporty beautiful latina woman model with full lips and doube D bra size through cleavage in casual clothes, natural skin, 8k uhd, high quality, film grain, Fujifilm XT3
+# inference_prompt: RAW photo, a portrait photo of a shapely and sporty beautiful latina woman model with full lips and doube D bra size through cleavage in casual clothes, natural skin, 8k uhd, high quality, film grain, Fujifilm XT3
+
+# inference_prompt: ultra realistic , hyper detail, portrait photo of a shapely and sporty beautiful latina woman model with full lips and doube D bra size through cleavage in casual clothes, natural (imperfect skin:1.8), cinematic lighting, magic neon, dark red city, Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K
+inference_prompt: ultra realistic , hyper detail, photo of a shapely and full lips and doube D bra size, sporty beautiful latina woman model with cleavage in casual clothes, (((imperfect skin:1.8))),  Canon EOS R3, nikon, f/1.4, ISO 200, 1/160s, 8K, RAW, unedited, symmetrical balance, in-frame, 8K, grained, -CGI, -anime, -painting
 # negative_prompt: (deformed iris, deformed pupils, semi-realistic, cgi, 3d, render, sketch, cartoon, drawing, anime:1.4), text, close up, cropped, out of frame, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck
 learnable_property: object
 initializer_token: cha
@@ -58,7 +63,9 @@ rank: 4
 train_text_encoder: false
 allow_tf32: false
 scale_lr: false
-use_8bit_adam: false
+# use_8bit_adam: false 
+use_8bit_adam: true #TODO cange to False
+
 text_inv: false # text_inv only
 lora: false     # lora
 center_crop: true
