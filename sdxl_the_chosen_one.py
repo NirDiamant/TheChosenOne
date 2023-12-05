@@ -44,9 +44,7 @@ from transformers import AutoTokenizer, PretrainedConfig, CLIPTextModel, CLIPTok
 import diffusers
 from diffusers import AutoencoderKL, DDPMScheduler, StableDiffusionXLPipeline, UNet2DConditionModel
 from diffusers.loaders import LoraLoaderMixin
-# from diffusers.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
-from diffusers.models.lora import LoRALinearLayer
-
+from diffusers.models.lora import LoRALinearLayer, text_encoder_lora_state_dict
 from diffusers.optimization import get_scheduler
 from diffusers.training_utils import compute_snr
 from diffusers.utils import check_min_version, is_wandb_available
@@ -666,7 +664,26 @@ class TextualInversionDataset(Dataset):
             return_tensors="pt",
         ).input_ids[0] # tokenize the whole sentence, e.g. a rendering of "placeholder"
         
-       
+        # # default to score-sde preprocessing
+        # img = np.array(image).astype(np.uint8)
+
+        # if self.center_crop:
+        #     crop = min(img.shape[0], img.shape[1])
+        #     (
+        #         h,
+        #         w,
+        #     ) = (
+        #         img.shape[0],
+        #         img.shape[1],
+        #     )
+        #     img = img[(h - crop) // 2 : (h + crop) // 2, (w - crop) // 2 : (w + crop) // 2]
+
+        # image = Image.fromarray(img)
+        # image = image.resize((self.size, self.size), resample=self.interpolation)
+
+        # image = self.flip_transform(image)
+        # image = np.array(image).astype(np.uint8)
+        # image = (image / 127.5 - 1.0).astype(np.float32)
         return example # contain the encoding of the text prompt (template + placeholder), and the img 
 
 
@@ -1066,7 +1083,11 @@ def train(args, loop=0, loop_num = 0):
         optimizer_class = torch.optim.AdamW
 
     # Optimizer creation, 
-  
+    # params_to_optimize = (
+    #     itertools.chain(unet_lora_parameters, text_lora_parameters_one, text_lora_parameters_two)
+    #     if args.train_text_encoder
+    #     else unet_lora_parameters
+    # )
     
     # Optimizer creation, with textual inversion
     if args.text_inv:
@@ -1122,7 +1143,129 @@ def train(args, loop=0, loop_num = 0):
             set="train",
         )
         
-       
+        # data_files = {}
+        # if args.train_data_dir is not None:
+        #     data_files["train"] = os.path.join(args.train_data_dir, "**")
+        # dataset = load_dataset(
+        #     "imagefolder",
+        #     data_files=data_files,
+        #     cache_dir=args.cache_dir,
+        # )
+        
+    # Preprocessing the datasets.
+    # We need to tokenize inputs and targets.
+    # column_names = dataset["train"].column_names
+
+    # # 6. Get the column names for input/target.
+    # dataset_columns = DATASET_NAME_MAPPING.get(args.dataset_name, None)
+    # if args.image_column is None:
+    #     image_column = dataset_columns[0] if dataset_columns is not None else column_names[0]
+    # else:
+    #     image_column = args.image_column
+    #     if image_column not in column_names:
+    #         raise ValueError(
+    #             f"--image_column' value '{args.image_column}' needs to be one of: {', '.join(column_names)}"
+    #         )
+    # if args.caption_column is None:
+    #     caption_column = dataset_columns[1] if dataset_columns is not None else column_names[1]
+    # else:
+    #     caption_column = args.caption_column
+    #     if caption_column not in column_names:
+    #         raise ValueError(
+    #             f"--caption_column' value '{args.caption_column}' needs to be one of: {', '.join(column_names)}"
+    #         )
+
+    # # # Preprocessing the datasets.
+    # # # We need to tokenize input captions and transform the images.
+    # def tokenize_captions(examples, is_train=True):
+    #     captions = []
+    #     for caption in examples[caption_column]:
+    #         if isinstance(caption, str):
+    #             captions.append(caption)
+    #         elif isinstance(caption, (list, np.ndarray)):
+    #             # take a random caption if there are multiple
+    #             captions.append(random.choice(caption) if is_train else caption[0])
+    #         else:
+    #             raise ValueError(
+    #                 f"Caption column `{caption_column}` should contain either strings or lists of strings."
+    #             )
+    #     tokens_one = tokenize_prompt(tokenizer_one, captions)
+    #     tokens_two = tokenize_prompt(tokenizer_two, captions)
+    #     return tokens_one, tokens_two
+
+    # # # Preprocessing the datasets.
+    # train_resize = transforms.Resize(args.resolution, interpolation=transforms.InterpolationMode.BILINEAR)
+    # train_crop = transforms.CenterCrop(args.resolution) if args.center_crop else transforms.RandomCrop(args.resolution)
+    # train_flip = transforms.RandomHorizontalFlip(p=1.0)
+    # train_transforms = transforms.Compose(
+    #     [
+    #         transforms.ToTensor(),
+    #         transforms.Normalize([0.5], [0.5]),
+    #     ]
+    # )
+
+    # def preprocess_train(examples):
+    #     images = [image.convert("RGB") for image in examples[image_column]]
+    #     # image aug
+    #     original_sizes = []
+    #     all_images = []
+    #     crop_top_lefts = []
+    #     for image in images:
+    #         original_sizes.append((image.height, image.width))
+    #         image = train_resize(image)
+    #         if args.center_crop:
+    #             y1 = max(0, int(round((image.height - args.resolution) / 2.0)))
+    #             x1 = max(0, int(round((image.width - args.resolution) / 2.0)))
+    #             image = train_crop(image)
+    #         else:
+    #             y1, x1, h, w = train_crop.get_params(image, (args.resolution, args.resolution))
+    #             image = crop(image, y1, x1, h, w)
+    #         if args.random_flip and random.random() < 0.5:
+    #             # flip
+    #             x1 = image.width - x1
+    #             image = train_flip(image)
+    #         crop_top_left = (y1, x1)
+    #         crop_top_lefts.append(crop_top_left)
+    #         image = train_transforms(image)
+    #         all_images.append(image)
+
+    #     examples["original_sizes"] = original_sizes
+    #     examples["crop_top_lefts"] = crop_top_lefts
+    #     examples["pixel_values"] = all_images
+    #     tokens_one, tokens_two = tokenize_captions(examples)
+    #     examples["input_ids_one"] = tokens_one
+    #     examples["input_ids_two"] = tokens_two
+    #     return examples
+
+    # with accelerator.main_process_first():
+    #     if args.max_train_samples is not None:
+    #         dataset["train"] = dataset["train"].shuffle(seed=args.seed).select(range(args.max_train_samples))
+    #     # Set the training transforms
+    #     train_dataset = dataset["train"].with_transform(preprocess_train)
+
+    # def collate_fn(examples):
+    #     pixel_values = torch.stack([example["pixel_values"] for example in examples])
+    #     pixel_values = pixel_values.to(memory_format=torch.contiguous_format).float()
+    #     original_sizes = [example["original_sizes"] for example in examples]
+    #     crop_top_lefts = [example["crop_top_lefts"] for example in examples]
+    #     input_ids_one = torch.stack([example["input_ids_one"] for example in examples])
+    #     input_ids_two = torch.stack([example["input_ids_two"] for example in examples])
+    #     return {
+    #         "pixel_values": pixel_values,
+    #         "input_ids_one": input_ids_one,
+    #         "input_ids_two": input_ids_two,
+    #         "original_sizes": original_sizes,
+    #         "crop_top_lefts": crop_top_lefts,
+    #     }
+
+    # # DataLoaders creation:
+    # train_dataloader = torch.utils.data.DataLoader(
+    #     train_dataset,
+    #     shuffle=True,
+    #     collate_fn=collate_fn,
+    #     batch_size=args.train_batch_size,
+    #     num_workers=args.dataloader_num_workers,
+    # )
     
     # # DataLoaders creation: using the textual inversion format
     train_dataloader = torch.utils.data.DataLoader(
