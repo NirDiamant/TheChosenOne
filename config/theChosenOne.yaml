@@ -2,7 +2,9 @@
 # pretrained_model_name_or_path: stablediffusionapi/realistic-vision-512
 # pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl
 
-pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl-v7
+# pretrained_model_name_or_path: stablediffusionapi/juggernaut-xl-v7
+
+pretrained_model_name_or_path = stabilityai/sdxl-turbo
 
 
 pretrained_vae_model_name_or_path: madebyollin/sdxl-vae-fp16-fix
@@ -63,8 +65,8 @@ rank: 4
 train_text_encoder: false
 allow_tf32: false
 scale_lr: false
-use_8bit_adam: false 
-# use_8bit_adam: true #TODO cange to False
+# use_8bit_adam: false 
+use_8bit_adam: true #TODO cange to False
 
 text_inv: false # text_inv only
 lora: false     # lora

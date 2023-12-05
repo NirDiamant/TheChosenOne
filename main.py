@@ -253,7 +253,9 @@ def load_trained_pipeline(model_path = None, load_lora=True, lora_path=None):
     """
     if model_path is not None:
         # TODO: long warning for lora
-        print("loaded model")
+        print("loaded model of nir ")
+        print("loaded model of nir ")
+        print("loaded model of nir ")
         pipe = DiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float16)
         pipe.safety_checker = None
         pipe.requires_safety_checker = False
