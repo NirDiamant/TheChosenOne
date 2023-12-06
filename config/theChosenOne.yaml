@@ -42,11 +42,11 @@ backup_data_dir_root: ./data # Your dataset backup folder
 # max_train_steps: 500
 max_train_steps: 1
 
-num_of_generated_img: 2
+num_of_generated_img: 4
 # num_of_generated_img: 128
-dmin_c: 1
+dmin_c: 2
 # dsize_c: 20    
-dsize_c: 1    
+dsize_c: 2   
 # infer_steps: 35
 infer_steps: 1
 
