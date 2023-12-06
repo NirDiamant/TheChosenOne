@@ -262,10 +262,12 @@ def load_trained_pipeline(model_path = None, load_lora=True, lora_path=None):
         if load_lora:
             pipe.load_lora_weights(lora_path)
     else:
-        print("loaded defualt model")
-        print("loaded defualt model")
-        print("loaded defualt model")
-        pipe = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0")
+        # print("loaded defualt model")
+        # print("loaded defualt model")
+        # print("loaded defualt model")
+        # pipe = DiffusionPipeline.from_pretrained("stabilityai/stable-diffusion-xl-base-1.0")
+        pipe = DiffusionPipeline.from_pretrained(args.pretrained_model_name_or_path)
+        print(f"loaded defualt model which is: {args.pretrained_model_name_or_path}")
     pipe.to("cuda")
     return pipe
 
