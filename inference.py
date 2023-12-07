@@ -16,7 +16,7 @@ def config_2_args(path):
 
 args = config_2_args("config/theChosenOne.yaml")
 
-loop = 1
+loop = 0
 model_path = os.path.join(args.output_dir, args.character_name, str(loop))
 pipe = DiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float16)
 pipe.to("cuda")
@@ -27,7 +27,7 @@ image_postfix = prompt_postfix.replace(" ", "_")
 
 # create folder
 output_folder = f"./inference_results/{args.character_name}"
-os.makedirs(output_folder)
+os.makedirs(output_folder) #TODO check if folder exists
 
 # remember to use the place holader here
 prompt = f"A photo of {args.placeholder_token}{prompt_postfix}."
