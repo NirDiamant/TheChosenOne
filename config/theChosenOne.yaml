@@ -28,7 +28,7 @@ caption_column: text
 resolution: 1024
 random_flip: true
 train_batch_size: 1
-num_train_epochs: 2
+num_train_epochs: 3
 checkpointing_steps: 500
 # checkpointing_steps: 5
 
