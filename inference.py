@@ -16,14 +16,14 @@ def config_2_args(path):
 
 args = config_2_args("config/theChosenOne.yaml")
 
-loop = 0
+loop = 1
 model_path = os.path.join(args.output_dir, args.character_name, str(loop))
 pipe = DiffusionPipeline.from_pretrained(model_path, torch_dtype=torch.float16)
 pipe.to("cuda")
 pipe.safety_checker = None
 pipe.requires_safety_checker = False
-# pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps * args.num_train_epochs}"))
-pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps}"))
+pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps * args.num_train_epochs}"))
+# pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps}"))
 
 
 prompt_postfix = " sitting on a rocket."

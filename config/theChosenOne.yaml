@@ -59,7 +59,7 @@ adam_weight_decay: 0.01
 
 adam_beta1: 0.9
 adam_beta2: 0.99
-max_loop: 1
+max_loop: 5
 # convergence_scale: 0.6 # 80% in the paper
 convergence_scale: 0.8 
 

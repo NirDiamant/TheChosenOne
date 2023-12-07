@@ -81,7 +81,7 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
             pipe = load_trained_pipeline()
         else:
             # Note that these configurations are changned during training.
-            # Since the the training is epoch based and we use iterations, the diffuser training script automatically calculate a new epoch according to the iteration and dataset size, thus the predefined epoches will be overrided.
+            # Since the training is epoch based and we use iterations, the diffuser training script automatically calculate a new epoch according to the iteration and dataset size, thus the predefined epoches will be overrided.
             args.output_dir_per_loop = os.path.join(output_dir_base, args.character_name, str(loop - 1))
             
             # load model from the output dir in PREVIOUS loop
