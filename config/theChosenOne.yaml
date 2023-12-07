@@ -26,7 +26,7 @@ resolution: 1024
 random_flip: true
 train_batch_size: 1
 num_train_epochs: 1
-checkpointing_steps: 500
+checkpointing_steps: 200
 # checkpointing_steps: 5
 
 learning_rate: 0.00003
@@ -39,7 +39,7 @@ output_dir: ./experiments
 train_data_dir: ./loop_images
 backup_data_dir_root: ./data # Your dataset backup folder
 # lora_ckpt_dir: checkpoint-1200
-max_train_steps: 500
+max_train_steps: 200
 # max_train_steps: 1
 
 # num_of_generated_img: 6
