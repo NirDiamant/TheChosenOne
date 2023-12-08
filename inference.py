@@ -26,7 +26,7 @@ pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing
 # pipe.load_lora_weights(os.path.join(model_path, f"checkpoint-{args.checkpointing_steps}"))
 
 
-prompt_postfix = " sitting on a rocket."
+prompt_postfix = "sitting on a rocket."
 image_postfix = prompt_postfix.replace(" ", "_")
 
 # create folder

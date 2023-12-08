@@ -105,7 +105,7 @@ def train_loop(args, loop_num: int, vis=True, start_from=0):
             print(f"[Loop [{loop}/{loop_num-1}], generating image {n_img}/{args.num_of_generated_img - 1}")
             
             # set up different seeds for each image
-            torch.manual_seed(n_img * np.random.randint(1000))
+            torch.manual_seed(n_img * np.random.randint(10000))
             tmp_folder = f"{args.backup_data_dir_root}/{args.character_name}/{loop}"
             
             # we can load the initially generated images from local backup folder
