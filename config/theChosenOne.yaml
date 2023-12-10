@@ -46,12 +46,12 @@ max_train_steps: 500
 # max_train_steps: 1
 
 # num_of_generated_img: 6
-num_of_generated_img: 512
-dmin_c: 15
+num_of_generated_img: 128
+dmin_c: 5
 # dmin_c: 10
 
 # dsize_c: 20    
-dsize_c: 30    
+dsize_c: 5    
 
 # dsize_c: 3   
 infer_steps: 35
@@ -63,8 +63,8 @@ adam_weight_decay: 0.0001
 
 adam_beta1: 0.9
 adam_beta2: 0.99
-max_loop: 10
-convergence_scale: 0.4 # 80% in the paper
+max_loop: 3
+convergence_scale: 0.5 # 80% in the paper
 # convergence_scale: 0.8 
 
 
